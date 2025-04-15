@@ -36,7 +36,6 @@ motd() {
     fi
     userconnected=$(who | grep pts | wc -l)
     usernames=$(who | grep pts | awk '{print $1}' | xargs)
-    fi
     proc=$(nproc --all)
     proc_120=$(($proc*120/100))
     memfree=$(cat /proc/meminfo | grep MemFree | awk '{print $2}')
