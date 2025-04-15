@@ -242,7 +242,8 @@ EOF
 export -f vic
 # Sudo su with bashrc reload
 suroot() {
-    sudo su -c "source ~/bashrc_remote.sh; exec bash"
+    user=$(whoami)
+    sudo su -c "source /home/$user/bashrc_remote.sh; exec bash"
 }
 export -f suroot
 oomanalyser() {
