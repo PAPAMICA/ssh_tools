@@ -203,14 +203,11 @@ fi
 # Custom prompt
 # Function to update PS1 color based on user
 update_ps1_color() {
-    case "$(whoami)" in
-        root)
-            PS1_USER_COLOR="$red"
-            ;;
-        *)
-            PS1_USER_COLOR="$green"
-            ;;
-    esac
+    if [ "$(whoami)" = "root" ]; then
+        PS1_USER_COLOR="$red"
+    else
+        PS1_USER_COLOR="$green"
+    fi
     export PS1_USER_COLOR
 }
 
@@ -219,13 +216,13 @@ update_ps1_color
 
 # Add trap to update color when user changes
 trap update_ps1_color DEBUG
-export PS1="\[${PS1_USER_COLOR}\]\u\[${grey}\]@\[${red}\]\h \[${grey}\]>\[${reset}\] "
+export PS1="\[${PS1_USER_COLOR}\]\u\[${grey}\]@\[${blue}\]\h \[${grey}\]>\[${reset}\] "
 p() {
-    export PS1="\[${PS1_USER_COLOR}\]\u\[${grey}\]@\[${red}\]\h\[${yellow}\]:\w \[${grey}\]>\[${reset}\] "
+    export PS1="\[${PS1_USER_COLOR}\]\u\[${grey}\]@\[${blue}\]\h\[${yellow}\]:\w \[${grey}\]>\[${reset}\] "
 }
 export -f p
 hp() {
-    export PS1="\[${PS1_USER_COLOR}\]\u\[${grey}\]@\[${red}\]\h \[${grey}\]>\[${reset}\] "
+    export PS1="\[${PS1_USER_COLOR}\]\u\[${grey}\]@\[${blue}\]\h \[${grey}\]>\[${reset}\] "
 }
 export -f hp
 # Get list of SSH root connections and key owner used to connect
