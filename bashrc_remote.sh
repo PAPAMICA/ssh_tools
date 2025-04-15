@@ -35,13 +35,8 @@ motd() {
         distribution="Distribution inconnue"
     fi
     if [[ "$(whoami)" == "root" ]]; then
-        userconnected=$(who | grep pts | awk -F '[()]' '{print $2}' | grep -c -v ":S.")
-        KEYS=$(grep -o 'ssh-rsa.*' ~/.ssh/authorized_keys | while read type key name; do (cd /tmp; printf "%s %s %s" "$type" "$key" "$name" > "$name"; ssh-keygen -l -f "$name"; rm "$name"); done)
-        for ip in $(who --ips | awk '$2 ~ /^pts/ { print $NF }'); do
-            key=$(grep $ip /var/log/auth.log | grep "Accepted publickey for root" | tail -n 1 | awk '{print $NF}')
-            username=$(echo $KEYS | sed 's/ /\n/g' | grep -A 1 $key | tail -n 1 | awk -F '[:@]' '{print $1}' | sed 's/^root-//')
-            usernames="$usernames $username"
-        done
+        userconnected=$(who | grep pts | wc -l)
+        usernames=$(who | grep pts | awk '{print $1}' | xargs)
     fi
     proc=$(nproc --all)
     proc_120=$(($proc*120/100))
@@ -243,7 +238,7 @@ export -f vic
 # Sudo su with bashrc reload
 suroot() {
     user=$(whoami)
-    sudo su -c "source /home/$user/bashrc_remote.sh; exec bash"
+    sudo su -c "source /home/$user/bashrc_remote.sh; exec bash" root
 }
 export -f suroot
 oomanalyser() {
