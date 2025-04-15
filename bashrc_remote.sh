@@ -34,9 +34,8 @@ motd() {
     else
         distribution="Distribution inconnue"
     fi
-    if [[ "$(whoami)" == "root" ]]; then
-        userconnected=$(who | grep pts | wc -l)
-        usernames=$(who | grep pts | awk '{print $1}' | xargs)
+    userconnected=$(who | grep pts | wc -l)
+    usernames=$(who | grep pts | awk '{print $1}' | xargs)
     fi
     proc=$(nproc --all)
     proc_120=$(($proc*120/100))
