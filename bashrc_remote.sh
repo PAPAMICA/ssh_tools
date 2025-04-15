@@ -187,34 +187,38 @@ motd() {
 export -f motd
 motd
 # Family help
-l3help() {
+dfihelp() {
     echo -e "\nAvailable commands:
     ${bold}motd${reset}               : Display welcome message
     ${bold}p / hp${reset}             : Show / hide current path
-    ${bold}rootauthlog${reset}        : Show last connected users
-    ${bold}vic${reset}                : Vim with local vimrc ~/.vimrc_remote
     ${bold}oomanalyser${reset}        : Execute script to analyze ooms
     "
 }
-export -f l3help
+export -f dfihelp
 # Increase process priority with nice and ionice
 if [ "$EUID" -eq 0 ]; then
     renice -n -20 -p $$ >/dev/null
     ionice -c 2 -n 0 -p $$ >/dev/null
 fi
 # Custom prompt
-case "$(whoami)" in
-    root)
-        PS1_USER_COLOR="$blue"
-        ;;
-    l3)
-        PS1_USER_COLOR="$purple"
-        ;;
-    *)
-        PS1_USER_COLOR="$green"
-        ;;
-esac
-export PS1_USER_COLOR
+# Function to update PS1 color based on user
+update_ps1_color() {
+    case "$(whoami)" in
+        root)
+            PS1_USER_COLOR="$red"
+            ;;
+        *)
+            PS1_USER_COLOR="$green"
+            ;;
+    esac
+    export PS1_USER_COLOR
+}
+
+# Initial call
+update_ps1_color
+
+# Add trap to update color when user changes
+trap update_ps1_color DEBUG
 export PS1="\[${PS1_USER_COLOR}\]\u\[${grey}\]@\[${red}\]\h \[${grey}\]>\[${reset}\] "
 p() {
     export PS1="\[${PS1_USER_COLOR}\]\u\[${grey}\]@\[${red}\]\h\[${yellow}\]:\w \[${grey}\]>\[${reset}\] "
@@ -229,9 +233,6 @@ rootauthlog() {
     local KEYS=$(grep -o 'ssh-rsa.*' ~/.ssh/authorized_keys | while read type key name; do (cd /tmp; printf "%s %s %s" "$type" "$key" "$name" > "$name"; ssh-keygen -l -f "$name"; rm "$name"); done)
     l auth a | grep "Accepted publickey for root" | while read line; do echo -n "$line -> "; echo "$KEYS" | grep "$(echo $line | awk '{print $NF}')" | awk '{print $3}'; done
 }
-export -f rootauthlog
-bind '"\e[A": history-search-backward' # Up arrow to browse commands with similar start
-bind '"\e[B": history-search-forward'  # Down arrow to move forward in history
 # Vim with custom vimrc
 vic() {
     local tmpfile=$(mktemp)
