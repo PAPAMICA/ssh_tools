@@ -240,6 +240,11 @@ EOF
     rm $tmpfile
 }
 export -f vic
+# Sudo su with bashrc reload
+suroot() {
+    sudo su -c "source ~/bashrc_remote.sh; exec bash"
+}
+export -f suroot
 oomanalyser() {
     local tmpfile=$(mktemp)
     local url="https://raw.githubusercontent.com/LukeShirnia/out-of-memory/3f8bdbc38f8139e228be0085960e190554148af3/oom-investigate.py"
