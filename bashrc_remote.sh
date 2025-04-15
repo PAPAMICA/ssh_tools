@@ -148,9 +148,7 @@ motd() {
     fi
     echo -e "\n  Hostname : ${blue}${bold}$(hostname)$purple${moreinfo}${reset}"
     echo -e "  Distribution : ${bold}$distribution${reset}"
-    if [[ "$(whoami)" == "root" ]]; then
-        echo -e "  Connected users : ${bold}$userconnected$purple ${usernames}${reset}"
-    fi
+    echo -e "  Connected users : ${bold}$userconnected$purple ${usernames}${reset}"
     printf "\n  Processors : $proc"
     printf "\n"
     printf "  Load CPU : $onecolor$one (1min)$reset / $fivecolor$five (5min)$reset / $fifteencolor$fifteen (15min)$reset"
